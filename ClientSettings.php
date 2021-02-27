@@ -6,17 +6,24 @@ use Exception;
 
 class ClientSettings
 {
+    public const FIELD_APP_NAME    = 'appName';
+    public const FIELD_SCOPES      = 'scopes';
+    public const FIELD_AUTH_DATA   = 'authData';
+    public const FIELD_ACCESS_TYPE = 'accessType';
+    public const FIELD_TOKEN_PATH  = 'tokenPath';
+
     private string $appName;
     private array $scopes;
     private string $authData;
     private string $accessType;
     private string $tokenPath;
 
-    private $requiredFields = [
-        'appName'    => true,
-        'scopes'     => true,
-        'authData'   => true,
-        'accessType' => true,
+    private array $requiredFields = [
+        self::FIELD_APP_NAME    => true,
+        self::FIELD_SCOPES      => true,
+        self::FIELD_AUTH_DATA   => true,
+        self::FIELD_ACCESS_TYPE => true,
+        self::FIELD_TOKEN_PATH  => true,
     ];
 
     /**
