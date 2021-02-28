@@ -2,7 +2,7 @@
 
 use root\ClientSettings;
 
-define('CREDENTIALS_DIR', __DIR__);
+define('CREDENTIALS_DIR', __DIR__ . '/credentials');
 
 return [
     ClientSettings::FIELD_APP_NAME    => 'test',
