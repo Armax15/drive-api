@@ -1,10 +1,10 @@
 <?php
 
-namespace root;
+namespace core\API\APISettings;
 
 use Exception;
 
-class ClientSettings
+class ClientSettings implements APISettingsInterface
 {
     public const FIELD_APP_NAME    = 'appName';
     public const FIELD_SCOPES      = 'scopes';

@@ -1,6 +1,6 @@
 <?php
 
-use root\ClientSettings;
+use core\API\APISettings\ClientSettings;
 
 define('CREDENTIALS_DIR', __DIR__ . '/credentials');
 

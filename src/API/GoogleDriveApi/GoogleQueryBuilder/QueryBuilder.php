@@ -1,7 +1,7 @@
 <?php
 
 
-namespace root;
+namespace core\API\GoogleDriveApi\GoogleQueryBuilder;
 
 
 use InvalidArgumentException;

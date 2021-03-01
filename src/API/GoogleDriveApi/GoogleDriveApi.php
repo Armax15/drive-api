@@ -1,9 +1,10 @@
 <?php
 
 
-namespace root;
+namespace core\API\GoogleDriveApi;
 
 
+use core\API\APISettings\ClientSettings;
 use Google_Client;
 use Google_Service_Drive;
 use RuntimeException;
