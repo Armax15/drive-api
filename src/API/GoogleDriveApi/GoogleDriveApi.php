@@ -4,12 +4,15 @@
 namespace core\API\GoogleDriveApi;
 
 
+use core\API\APIService;
 use core\API\APISettings\ClientSettings;
+use core\API\Params;
+use core\API\ServiceResponse;
 use Google_Client;
 use Google_Service_Drive;
 use RuntimeException;
 
-class GoogleDriveApi
+class GoogleDriveApi implements APIService
 {
     private ClientSettings $clientSettings;
     private Google_Client $client;
@@ -106,5 +109,47 @@ class GoogleDriveApi
         }
 
         return $accessToken;
+    }
+
+    public function getFiles(Params $params): ServiceResponse
+    {
+        $filesList = $this->getGoogleDriveService()->files->listFiles($params->toArray());
+        if ($filesList->count() < 1) {
+            return new ServiceResponse([]);
+        }
+
+        $files = [];
+        foreach ($filesList->getFiles() as $file) {
+            $files[] = [
+                'id' => $file->getId(),
+                'name' => $file->getName(),
+                'mimeType' => $file->getMimeType(),
+                'kind' => $file->getKind(),
+                'modifiedAt' => $file->getModifiedTime(),
+                'size' => $file->getSize(),
+            ];
+        }
+
+        return new ServiceResponse($files);
+    }
+
+    public function createFiles(Params $params): ServiceResponse
+    {
+        // TODO: Implement createFiles() method.
+    }
+
+    public function deleteFiles(Params $params): ServiceResponse
+    {
+        // TODO: Implement deleteFiles() method.
+    }
+
+    public function updateFiles(Params $params): ServiceResponse
+    {
+        // TODO: Implement updateFiles() method.
+    }
+
+    public function getServiceName(): string
+    {
+        // TODO: Implement getServiceName() method.
     }
 }

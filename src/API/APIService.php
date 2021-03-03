@@ -4,12 +4,8 @@
 namespace core\API;
 
 
-use core\API\APISettings\APISettingsInterface;
-
 interface APIService
 {
-
-    public function __construct(APISettingsInterface $settings);
 
     public function getFiles(Params $params): ServiceResponse;
 
