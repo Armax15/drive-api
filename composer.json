@@ -2,7 +2,8 @@
     "require": {
       "google/apiclient": "^2.0",
       "ext-json": "*",
-      "php": ">=7.4.0"
+      "php": ">=7.4.0",
+      "ext-fileinfo": "*"
     },
     "autoload": {
        "psr-4": {

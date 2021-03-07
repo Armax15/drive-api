@@ -6,6 +6,7 @@ namespace core\API\GoogleDriveApi;
 
 use core\API\APIService;
 use core\API\APISettings\ClientSettings;
+use core\API\File\File;
 use core\API\Params;
 use core\API\ServiceResponse;
 use Google_Client;
@@ -14,9 +15,12 @@ use RuntimeException;
 
 class GoogleDriveApi implements APIService
 {
+    public const SERVICE_NAME = 'GoogleDriveApi';
+
     private ClientSettings $clientSettings;
     private Google_Client $client;
     private Google_Service_Drive $service;
+    private array $availableParams = ['q', 'file'];
 
     public function __construct(ClientSettings $settings)
     {
@@ -27,7 +31,7 @@ class GoogleDriveApi implements APIService
      * @return Google_Service_Drive
      * @throws \Google\Exception
      */
-    public function getGoogleDriveService(): Google_Service_Drive
+    private function getGoogleDriveService(): Google_Service_Drive
     {
         if (!isset($this->service)) {
             $this->createClientIfNotExists();
@@ -111,6 +115,14 @@ class GoogleDriveApi implements APIService
         return $accessToken;
     }
 
+    /**
+     * @return Params
+     */
+    public function initEmptyParams(): Params
+    {
+        return new Params($this->availableParams);
+    }
+
     public function getFiles(Params $params): ServiceResponse
     {
         $filesList = $this->getGoogleDriveService()->files->listFiles($params->toArray());
@@ -133,9 +145,18 @@ class GoogleDriveApi implements APIService
         return new ServiceResponse($files);
     }
 
-    public function createFiles(Params $params): ServiceResponse
+    public function createFile(File $file): ServiceResponse
     {
-        // TODO: Implement createFiles() method.
+        $driveFile = $this->getGoogleDriveService()->files->create($file->getFile(), $file->getOptions());
+
+        return new ServiceResponse([
+            'id' => $driveFile->getId(),
+            'name' => $driveFile->getName(),
+            'mimeType' => $driveFile->getMimeType(),
+            'kind' => $driveFile->getKind(),
+            'modifiedAt' => $driveFile->getModifiedTime(),
+            'size' => $driveFile->getSize(),
+        ]);
     }
 
     public function deleteFiles(Params $params): ServiceResponse
@@ -150,6 +171,6 @@ class GoogleDriveApi implements APIService
 
     public function getServiceName(): string
     {
-        // TODO: Implement getServiceName() method.
+        return self::SERVICE_NAME;
     }
 }
