@@ -15,7 +15,7 @@ interface APIService
 
     public function deleteFiles(Params $params): ServiceResponse;
 
-    public function updateFiles(Params $params): ServiceResponse;
+    public function updateFile(File $file): ServiceResponse;
 
     public function getServiceName(): string;
 }

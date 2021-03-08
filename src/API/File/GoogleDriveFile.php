@@ -40,7 +40,7 @@ class GoogleDriveFile implements File
      *
      * @return static
      */
-    public static function getFileObject(string $name, string $path): self
+    public static function getUploadFileObject(string $name, string $path): self
     {
         if (!is_readable($path)) {
             throw new InvalidArgumentException("File from path [{$path}] is not readable.");
