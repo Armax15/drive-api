@@ -13,7 +13,7 @@ interface APIService
 
     public function createFile(File $file): ServiceResponse;
 
-    public function deleteFiles(Params $params): ServiceResponse;
+    public function deleteFile(File $file): ServiceResponse;
 
     public function updateFile(File $file): ServiceResponse;
 

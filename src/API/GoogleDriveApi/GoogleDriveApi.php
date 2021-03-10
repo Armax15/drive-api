@@ -159,9 +159,17 @@ class GoogleDriveApi implements APIService
         ]);
     }
 
-    public function deleteFiles(Params $params): ServiceResponse
+    public function deleteFile(File $file): ServiceResponse
     {
-        // TODO: Implement deleteFiles() method.
+        $fileId = $file->getFile()->getId();
+        if (empty($fileId)) {
+            throw new \InvalidArgumentException("File doesn't contain id field.");
+        }
+
+        $response = $this->getGoogleDriveService()->files->delete($fileId, $file->getOptions());
+        $status = $response->getStatusCode() === 204 ? ServiceResponse::SUCCESS_STATUS : ServiceResponse::FAIL_STATUS;
+
+        return new ServiceResponse([], $status);
     }
 
     public function updateFile(File $file): ServiceResponse
