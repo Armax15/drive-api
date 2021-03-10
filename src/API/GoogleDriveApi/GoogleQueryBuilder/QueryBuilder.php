@@ -20,22 +20,23 @@ class QueryBuilder
     public function addItem(string $fileTerm, string $operator, array $values): QueryBuilder
     {
         QueryFileTerms::validate($fileTerm, $operator);
-        $this->queryArray[] = $this->buildMultiCondition($values, $fileTerm);
+        $this->queryArray[] = $this->buildMultiCondition($fileTerm, $operator, $values);
 
         return $this;
     }
 
     /**
-     * @param array  $values
      * @param string $attributeName
+     * @param string $operator
+     * @param array  $values
      *
      * @return string
      */
-    private function buildMultiCondition(array $values, string $attributeName): string
+    private function buildMultiCondition(string $attributeName, string $operator, array $values): string
     {
         $preparedTargets = [];
         foreach ($values as $target) {
-            $preparedTargets[] = "{$attributeName}='{$target}'";
+            $preparedTargets[] = "{$attributeName} {$operator} '{$target}'";
         }
 
         return '(' . implode(' or ', $preparedTargets) . ')';
