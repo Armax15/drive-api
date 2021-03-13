@@ -1,16 +1,23 @@
 <?php
 
 
-namespace core\API\File;
+namespace core\API\File\GoogleDriveFile;
 
 
+use core\API\File\File;
 use Google_Service_Drive_DriveFile;
-use InvalidArgumentException;
-use LogicException;
 
 class GoogleDriveFile implements File
 {
     public const DIR_MIME_TYPE = 'application/vnd.google-apps.folder';
+
+    public const FIELD_ID          = 'id';
+    public const FIELD_NAME        = 'name';
+    public const FIELD_DATA        = 'data';
+    public const FIELD_MIME_TYPE   = 'mimeType';
+    public const FIELD_UPLOAD_TYPE = 'uploadType';
+
+    public const UPLOAD_TYPE_MEDIA = 'media';
 
     private Google_Service_Drive_DriveFile $file;
     private array $options;

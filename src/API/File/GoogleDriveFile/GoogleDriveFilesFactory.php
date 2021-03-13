@@ -1,7 +1,7 @@
 <?php
 
 
-namespace core\API\File;
+namespace core\API\File\GoogleDriveFile;
 
 
 use InvalidArgumentException;
@@ -28,11 +28,13 @@ class GoogleDriveFilesFactory
         }
 
         return new GoogleDriveFile(
-            ['name' => $name],
             [
-                'data'       => file_get_contents($path),
-                'mimeType'   => finfo_file($finfo, $path),
-                'uploadType' => 'media'
+                GoogleDriveFile::FIELD_NAME => $name,
+            ],
+            [
+                GoogleDriveFile::FIELD_DATA         => file_get_contents($path),
+                GoogleDriveFile::FIELD_MIME_TYPE    => finfo_file($finfo, $path),
+                GoogleDriveFile::FIELD_UPLOAD_TYPE  => GoogleDriveFile::UPLOAD_TYPE_MEDIA,
             ]
         );
     }
@@ -44,7 +46,7 @@ class GoogleDriveFilesFactory
      */
     public static function buildFileWithId(string $fileId): GoogleDriveFile
     {
-        return new GoogleDriveFile(['id' => $fileId]);
+        return new GoogleDriveFile([GoogleDriveFile::FIELD_ID => $fileId]);
     }
 
     /**
@@ -56,8 +58,8 @@ class GoogleDriveFilesFactory
     {
         return new GoogleDriveFile(
             [
-                'name' => $name,
-                'mimeType' => GoogleDriveFile::DIR_MIME_TYPE,
+                GoogleDriveFile::FIELD_DATA      => $name,
+                GoogleDriveFile::FIELD_MIME_TYPE => GoogleDriveFile::DIR_MIME_TYPE,
             ]
         );
     }
