@@ -9,7 +9,7 @@ use core\API\File\File;
 interface APIService
 {
 
-    public function getFiles(Params $params): ServiceResponse;
+    public function searchFiles(Params $params): ServiceResponse;
 
     public function createFile(File $file): ServiceResponse;
 
@@ -17,5 +17,7 @@ interface APIService
 
     public function updateFile(File $file): ServiceResponse;
 
-    public function getServiceName(): string;
+    public function downloadFile(File $file): ServiceResponse;
+
+    public static function getServiceName(): string;
 }

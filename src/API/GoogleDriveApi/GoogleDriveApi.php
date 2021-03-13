@@ -123,7 +123,7 @@ class GoogleDriveApi implements APIService
         return new Params($this->availableParams);
     }
 
-    public function getFiles(Params $params): ServiceResponse
+    public function searchFiles(Params $params): ServiceResponse
     {
         $filesList = $this->getGoogleDriveService()->files->listFiles($params->toArray());
         if ($filesList->count() < 1) {
@@ -161,11 +161,7 @@ class GoogleDriveApi implements APIService
 
     public function deleteFile(File $file): ServiceResponse
     {
-        $fileId = $file->getFile()->getId();
-        if (empty($fileId)) {
-            throw new \InvalidArgumentException("File doesn't contain id field.");
-        }
-
+        $fileId = $this->getFileIdOrThrowException($file);
         $response = $this->getGoogleDriveService()->files->delete($fileId, $file->getOptions());
         $status = $response->getStatusCode() === 204 ? ServiceResponse::SUCCESS_STATUS : ServiceResponse::FAIL_STATUS;
 
@@ -174,12 +170,9 @@ class GoogleDriveApi implements APIService
 
     public function updateFile(File $file): ServiceResponse
     {
-        $fileId = $file->getFile()->getId();
-        if (empty($fileId)) {
-            throw new \InvalidArgumentException("File doesn't contain id field.");
-        }
-
+        $fileId = $this->getFileIdOrThrowException($file);
         $driveFile = $this->getGoogleDriveService()->files->update($fileId, $file->getFile(), $file->getOptions());
+
         return new ServiceResponse([
             'id' => $driveFile->getId(),
             'name' => $driveFile->getName(),
@@ -190,11 +183,12 @@ class GoogleDriveApi implements APIService
         ]);
     }
 
-    public function download(File $file): int
+    public function downloadFile(File $file): ServiceResponse
     {
-        $fileId = $file->getFile()->getId();
-        if (empty($fileId)) {
-            throw new \InvalidArgumentException("File doesn't contain id field.");
+        $fileId = $this->getFileIdOrThrowException($file);
+        $saveTo = $file->getOptions()['saveTo'] ?? null;
+        if (empty($saveTo)) {
+            throw new \InvalidArgumentException("Missed required file option [saveTo].");
         }
 
         $response = $this->getGoogleDriveService()->files->get($fileId, ['alt' => 'media']);
@@ -202,16 +196,26 @@ class GoogleDriveApi implements APIService
             throw new \LogicException("Empty response.");
         }
 
-        $saveTo = $file->getOptions()['saveTo'] ?? null;
-        if (empty($saveTo)) {
-            throw new \InvalidArgumentException("Missed required file option [saveTo].");
-        }
+        $written = (int) file_put_contents($saveTo, $response->getBody()->getContents());
 
-        return (int) file_put_contents($saveTo, $response->getBody()->getContents());
+        return new ServiceResponse([
+            'path' => $saveTo,
+            'size' => $written
+        ]);
     }
 
-    public function getServiceName(): string
+    public static function getServiceName(): string
     {
         return self::SERVICE_NAME;
+    }
+
+    private function getFileIdOrThrowException(File $file): string
+    {
+        $fileId = $file->getFile()->getId();
+        if (empty($fileId)) {
+            throw new \InvalidArgumentException("File doesn't contain id field.");
+        }
+
+        return $fileId;
     }
 }

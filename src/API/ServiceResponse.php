@@ -24,7 +24,7 @@ class ServiceResponse
         $this->data = $data;
     }
 
-    private function validateStatus(string $status)
+    private function validateStatus(string $status): void
     {
         if (empty(self::AVAILABLE_STATUSES[$status])) {
             throw new \InvalidArgumentException("Status [{$status}] doesn't supported.");
