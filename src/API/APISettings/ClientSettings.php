@@ -2,6 +2,8 @@
 
 namespace core\API\APISettings;
 
+use core\API\APISettings\APISettingsExceptions\ClientSettingsAccessException;
+use core\API\APISettings\APISettingsExceptions\ClientSettingsNotFound;
 use Exception;
 
 class ClientSettings implements APISettingsInterface
@@ -35,8 +37,12 @@ class ClientSettings implements APISettingsInterface
      */
     private function __construct(string $filePath)
     {
+        if (!file_exists($filePath)) {
+            throw new ClientSettingsNotFound($filePath);
+        }
+
         if (!is_readable($filePath)) {
-            throw new Exception("Settings file [{$filePath}] is unreadable.");
+            throw new ClientSettingsAccessException("Settings file [{$filePath}] is unreadable.");
         }
 
         $config = require $filePath;
